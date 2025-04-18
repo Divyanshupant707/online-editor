@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Online Photo Editor</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <h1>Advanced Photo Editor</h1>
+            <div class="header-controls">
+                <button id="open-file" class="btn"><i class="fas fa-folder-open"></i> Open</button>
+                <input type="file" id="file-input" accept="image/*" style="display: none;">
+                <button id="save-file" class="btn"><i class="fas fa-save"></i> Save</button>
+                <select id="save-format" class="dropdown">
+                    <option value="png">PNG</option>
+                    <option value="jpeg">JPEG</option>
+                    <option value="webp">WebP</option>
+                </select>
+                <button id="undo-btn" class="btn" title="Undo"><i class="fas fa-undo"></i></button>
+                <button id="redo-btn" class="btn" title="Redo"><i class="fas fa-redo"></i></button>
+            </div>
+        </header>
+
+        <div class="main-content">
+            <div class="toolbox">
+                <div class="tool-section">
+                    <h3>Tools</h3>
+                    <div class="tool-buttons">
+                        <button class="tool-btn active" data-tool="select" title="Select (V)"><i class="fas fa-mouse-pointer"></i></button>
+                        <button class="tool-btn" data-tool="crop" title="Crop (C)"><i class="fas fa-crop"></i></button>
+                        <button class="tool-btn" data-tool="brush" title="Brush (B)"><i class="fas fa-paint-brush"></i></button>
+                        <button class="tool-btn" data-tool="eraser" title="Eraser (E)"><i class="fas fa-eraser"></i></button>
+                        <button class="tool-btn" data-tool="text" title="Text (T)"><i class="fas fa-font"></i></button>
+                        <button class="tool-btn" data-tool="shapes" title="Shapes (S)"><i class="fas fa-shapes"></i></button>
+                        <button class="tool-btn" data-tool="gradient" title="Gradient (G)"><i class="fas fa-fill-drip"></i></button>
+                    </div>
+                </div>
+
+                <div class="tool-section">
+                    <h3>Adjustments</h3>
+                    <div class="adjustment-controls">
+                        <div class="slider-control">
+                            <label>Brightness</label>
+                            <input type="range" id="brightness" min="-100" max="100" value="0">
+                            <span id="brightness-value">0</span>
+                        </div>
+                        <div class="slider-control">
+                            <label>Contrast</label>
+                            <input type="range" id="contrast" min="-100" max="100" value="0">
+                            <span id="contrast-value">0</span>
+                        </div>
+                        <div class="slider-control">
+                            <label>Saturation</label>
+                            <input type="range" id="saturation" min="-100" max="100" value="0">
+                            <span id="saturation-value">0</span>
+                        </div>
+                        <div class="slider-control">
+                            <label>Exposure</label>
+                            <input type="range" id="exposure" min="-100" max="100" value="0">
+                            <span id="exposure-value">0</span>
+                        </div>
+                        <div class="slider-control">
+                            <label>Hue</label>
+                            <input type="range" id="hue" min="-180" max="180" value="0">
+                            <span id="hue-value">0</span>
+                        </div>
+                        <div class="slider-control">
+                            <label>Temperature</label>
+                            <input type="range" id="temperature" min="-100" max="100" value="0">
+                            <span id="temperature-value">0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tool-section">
+                    <h3>Filters</h3>
+                    <div class="filter-presets">
+                        <div class="filter-thumbnail" data-filter="none">Original</div>
+                        <div class="filter-thumbnail" data-filter="vintage">Vintage</div>
+                        <div class="filter-thumbnail" data-filter="blackWhite">B&W</div>
+                        <div class="filter-thumbnail" data-filter="sepia">Sepia</div>
+                        <div class="filter-thumbnail" data-filter="invert">Invert</div>
+                        <div class="filter-thumbnail" data-filter="blur">Blur</div>
+                        <div class="filter-thumbnail" data-filter="sharpen">Sharpen</div>
+                        <div class="filter-thumbnail" data-filter="emboss">Emboss</div>
+                    </div>
+                </div>
+
+                <div class="tool-section">
+                    <h3>Layers</h3>
+                    <div class="layers-container">
+                        <div class="layer-item active">
+                            <span>Background</span>
+                            <div class="layer-actions">
+                                <button class="layer-btn" title="Visibility"><i class="fas fa-eye"></i></button>
+                                <button class="layer-btn" title="Delete"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <button id="add-layer" class="btn"><i class="fas fa-plus"></i> Add Layer</button>
+                </div>
+            </div>
+
+            <div class="canvas-container">
+                <canvas id="main-canvas"></canvas>
+                <div class="canvas-overlay" id="canvas-overlay"></div>
+                <div class="canvas-controls">
+                    <button id="zoom-in" class="btn" title="Zoom In"><i class="fas fa-search-plus"></i></button>
+                    <button id="zoom-out" class="btn" title="Zoom Out"><i class="fas fa-search-minus"></i></button>
+                    <button id="zoom-reset" class="btn" title="Reset Zoom">100%</button>
+                    <button id="rotate-left" class="btn" title="Rotate Left"><i class="fas fa-undo"></i></button>
+                    <button id="rotate-right" class="btn" title="Rotate Right"><i class="fas fa-redo"></i></button>
+                    <button id="flip-horizontal" class="btn" title="Flip Horizontal"><i class="fas fa-arrows-alt-h"></i></button>
+                    <button id="flip-vertical" class="btn" title="Flip Vertical"><i class="fas fa-arrows-alt-v"></i></button>
+                </div>
+            </div>
+
+            <div class="properties-panel">
+                <div class="properties-section">
+                    <h3>Tool Properties</h3>
+                    <div id="tool-properties">
+                        <div class="property-group brush-properties">
+                            <div class="property">
+                                <label>Size</label>
+                                <input type="range" id="brush-size" min="1" max="100" value="10">
+                                <span id="brush-size-value">10</span>
+                            </div>
+                            <div class="property">
+                                <label>Hardness</label>
+                                <input type="range" id="brush-hardness" min="0" max="100" value="50">
+                                <span id="brush-hardness-value">50</span>
+                            </div>
+                            <div class="property">
+                                <label>Opacity</label>
+                                <input type="range" id="brush-opacity" min="1" max="100" value="100">
+                                <span id="brush-opacity-value">100</span>
+                            </div>
+                            <div class="property">
+                                <label>Color</label>
+                                <input type="color" id="brush-color" value="#000000">
+                            </div>
+                        </div>
+
+                        <div class="property-group text-properties" style="display: none;">
+                            <div class="property">
+                                <label>Text</label>
+                                <input type="text" id="text-content" placeholder="Enter text">
+                            </div>
+                            <div class="property">
+                                <label>Font</label>
+                                <select id="text-font">
+                                    <option value="Arial">Arial</option>
+                                    <option value="Times New Roman">Times New Roman</option>
+                                    <option value="Courier New">Courier New</option>
+                                    <option value="Georgia">Georgia</option>
+                                    <option value="Verdana">Verdana</option>
+                                </select>
+                            </div>
+                            <div class="property">
+                                <label>Size</label>
+                                <input type="range" id="text-size" min="8" max="72" value="24">
+                                <span id="text-size-value">24</span>
+                            </div>
+                            <div class="property">
+                                <label>Color</label>
+                                <input type="color" id="text-color" value="#000000">
+                            </div>
+                        </div>
+
+                        <div class="property-group shape-properties" style="display: none;">
+                            <div class="property">
+                                <label>Shape</label>
+                                <select id="shape-type">
+                                    <option value="rectangle">Rectangle</option>
+                                    <option value="circle">Circle</option>
+                                    <option value="triangle">Triangle</option>
+                                    <option value="line">Line</option>
+                                </select>
+                            </div>
+                            <div class="property">
+                                <label>Fill Color</label>
+                                <input type="color" id="shape-fill" value="#000000">
+                            </div>
+                            <div class="property">
+                                <label>Stroke Color</label>
+                                <input type="color" id="shape-stroke" value="#000000">
+                            </div>
+                            <div class="property">
+                                <label>Stroke Width</label>
+                                <input type="range" id="shape-stroke-width" min="1" max="20" value="2">
+                                <span id="shape-stroke-width-value">2</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="properties-section">
+                    <h3>History</h3>
+                    <div class="history-list">
+                        <!-- History items will be added here dynamically -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="status-bar">
+            <span id="cursor-position">X: 0, Y: 0</span>
+            <span id="image-size">No image loaded</span>
+            <span id="zoom-level">Zoom: 100%</span>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
